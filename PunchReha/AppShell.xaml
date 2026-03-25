@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:PunchReha.Views"
+       x:Class="PunchReha.AppShell"
+       Title="Punch Reha">
+
+    <ShellContent
+        Title="Menü"
+        Route="menu"
+        ContentTemplate="{DataTemplate views:MenuPage}" />
+
+    <ShellContent
+        Title="Spiel"
+        Route="game"
+        ContentTemplate="{DataTemplate views:GamePage}" />
+
+    <ShellContent
+        Title="Statistiken"
+        Route="stats"
+        ContentTemplate="{DataTemplate views:StatsPage}" />
+
+</Shell>

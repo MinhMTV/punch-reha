@@ -1,0 +1,22 @@
+## .NET / MAUI
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.vs/
+*.vscode/
+.idea/
+*.sln.docstates
+
+## Android
+*.apk
+*.aab
+local.properties
+
+## macOS
+.DS_Store
+
+## Build outputs
+[Pp]ackages/
+*.nupkg

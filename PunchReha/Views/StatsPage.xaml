@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PunchReha.ViewModels"
+             x:Class="PunchReha.Views.StatsPage"
+             x:DataType="vm:StatsViewModel"
+             Title="Level abgeschlossen!">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12" HorizontalOptions="Center">
+
+            <!-- Big Score -->
+            <Border BackgroundColor="#E8F5E9" Padding="32">
+                <VerticalStackLayout HorizontalOptions="Center">
+                    <Label Text="🏆" FontSize="48" HorizontalOptions="Center" />
+                    <Label Text="{Binding TotalScore}"
+                           FontSize="64" FontAttributes="Bold"
+                           HorizontalOptions="Center" TextColor="#2E7D32" />
+                    <Label Text="Punkte" FontSize="16" HorizontalOptions="Center" TextColor="Gray" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="📊 Statistiken" FontSize="18" FontAttributes="Bold" />
+
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                <Border Grid.Row="0" Grid.Column="0" Stroke="LightGray" StrokeShape="RoundRectangle 8" Padding="12">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="{Binding Stats.Hits}" FontSize="28" FontAttributes="Bold" TextColor="#4CAF50" HorizontalOptions="Center" />
+                        <Label Text="Treffer" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" Stroke="LightGray" StrokeShape="RoundRectangle 8" Padding="12">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="{Binding Stats.Misses}" FontSize="28" FontAttributes="Bold" TextColor="#E53935" HorizontalOptions="Center" />
+                        <Label Text="Fehlschläge" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0" Stroke="LightGray" StrokeShape="RoundRectangle 8" Padding="12">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="{Binding Stats.Accuracy, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#1E88E5" HorizontalOptions="Center" />
+                        <Label Text="Genauigkeit" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" Stroke="LightGray" StrokeShape="RoundRectangle 8" Padding="12">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="{Binding Stats.MaxCombo, StringFormat='x{0}'}" FontSize="28" FontAttributes="Bold" TextColor="#FFB300" HorizontalOptions="Center" />
+                        <Label Text="Max Combo" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="0" Stroke="LightGray" StrokeShape="RoundRectangle 8" Padding="12">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="{Binding Stats.MaxPower, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#8E24AA" HorizontalOptions="Center" />
+                        <Label Text="Max Power" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Row="2" Grid.Column="1" Stroke="LightGray" StrokeShape="RoundRectangle 8" Padding="12">
+                    <VerticalStackLayout HorizontalOptions="Center">
+                        <Label Text="{Binding Stats.AvgPower, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#00897B" HorizontalOptions="Center" />
+                        <Label Text="Avg Power" FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Direction breakdown -->
+            <Label Text="🎯 Schläge nach Richtung" FontSize="16" FontAttributes="Bold" Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding Stats.PunchByDirection}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,Auto" Padding="4">
+                            <Label Grid.Column="0" Text="{Binding Key}" FontSize="13" />
+                            <Label Grid.Column="1" Text="{Binding Value, StringFormat='{0} Schläge'}"
+                                   FontAttributes="Bold" FontSize="13" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Action Buttons -->
+            <Button Text="🔄 Nochmal spielen"
+                    Command="{Binding PlayAgainCommand}"
+                    BackgroundColor="#4CAF50" TextColor="White"
+                    HeightRequest="56" FontSize="18" Margin="0,16,0,0" />
+
+            <Button Text="🏠 Zum Menü"
+                    Command="{Binding BackToMenuCommand}"
+                    BackgroundColor="Transparent" TextColor="#1976D2"
+                    HeightRequest="56" FontSize="18" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

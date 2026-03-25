@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PunchReha.ViewModels"
+             x:Class="PunchReha.Views.GamePage"
+             x:DataType="vm:GameViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Stats Bar -->
+        <Border Grid.Row="0" BackgroundColor="#E3F2FD" Padding="12" Margin="8">
+            <Grid ColumnDefinitions="*,*,*,*">
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="⏱️" FontSize="14" HorizontalOptions="Center" />
+                    <Label Text="{Binding TimeRemainingMs, StringFormat='{0}s'}"
+                           FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="🎯" FontSize="14" HorizontalOptions="Center" />
+                    <Label Text="{Binding Score}"
+                           FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                    <Label Text="🔥" FontSize="14" HorizontalOptions="Center" />
+                    <Label FontSize="18" FontAttributes="Bold" HorizontalOptions="Center">
+                        <Label.Text>
+                            <MultiBinding StringFormat="x{0}">
+                                <Binding Path="Stats.Combo" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
+                    <Label Text="📊" FontSize="14" HorizontalOptions="Center" />
+                    <Label FontSize="18" FontAttributes="Bold" HorizontalOptions="Center">
+                        <Label.Text>
+                            <MultiBinding StringFormat="{0}%">
+                                <Binding Path="Stats.Accuracy" Converter="{StaticResource PercentConverter}" />
+                            </MultiBinding>
+                        </Label.Text>
+                    </Label>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Game Area (touch to punch) -->
+        <Grid Grid.Row="1" x:Name="GameArea"
+              BackgroundColor="Black">
+            <!-- Targets are drawn programmatically in code-behind -->
+            <GraphicsView x:Name="GameCanvas" />
+            
+            <!-- Waiting message -->
+            <Label Text="⚡ Warte auf Ziele..."
+                   TextColor="White" FontSize="18"
+                   HorizontalOptions="Center" VerticalOptions="Center"
+                   Opacity="0.5" />
+        </Grid>
+
+        <!-- Power Bar -->
+        <Border Grid.Row="2" Padding="12" Margin="8">
+            <Grid ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Text="{Binding Stats.MaxPower, StringFormat='💪 Max: {0:P0}'}"
+                       FontSize="12" />
+                <Label Grid.Column="1"
+                       Text="{Binding Stats.AvgPower, StringFormat='📊 Avg: {0:P0}'}"
+                       FontSize="12" HorizontalTextAlignment="End" />
+            </Grid>
+        </Border>
+    </Grid>
+
+</ContentPage>
