@@ -9,4 +9,9 @@ public partial class MenuPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    private async void OnHistoryTapped(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("history");
+    }
 }

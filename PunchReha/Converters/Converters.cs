@@ -33,14 +33,29 @@ public class BoolToColorConverter : IValueConverter
 }
 
 /// <summary>
-/// Converts remaining milliseconds to a formatted time string.
+/// Converts a list to a boolean (true if empty).
 /// </summary>
-public class MsToSecondsConverter : IValueConverter
+public class EmptyListConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is long ms) return $"{ms / 1000}s";
-        return "0s";
+        if (value is System.Collections.ICollection collection) return collection.Count == 0;
+        return true;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
+/// <summary>
+/// Converts filter level to background color.
+/// </summary>
+public class FilterLevelToColorConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is int level && level == 0) return Color.FromArgb("#FF6B35");
+        return Color.FromArgb("#1A1A2E");
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

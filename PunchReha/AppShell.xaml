@@ -3,21 +3,15 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:PunchReha.Views"
        x:Class="PunchReha.AppShell"
-       Title="Punch Reha">
+       Title="Punch Reha"
+       BackgroundColor="#0A0A1A"
+       Shell.BackgroundColor="#1A1A2E"
+       Shell.ForegroundColor="White"
+       Shell.TitleColor="White">
 
     <ShellContent
-        Title="Menü"
+        Title="🥊 Menü"
         Route="menu"
         ContentTemplate="{DataTemplate views:MenuPage}" />
-
-    <ShellContent
-        Title="Spiel"
-        Route="game"
-        ContentTemplate="{DataTemplate views:GamePage}" />
-
-    <ShellContent
-        Title="Statistiken"
-        Route="stats"
-        ContentTemplate="{DataTemplate views:StatsPage}" />
 
 </Shell>

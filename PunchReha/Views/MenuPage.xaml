@@ -85,6 +85,17 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+            <!-- History Button -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16" Margin="0,8,0,0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnHistoryTapped" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="📊 Verlauf &amp; Statistiken" FontSize="16" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="→" FontSize="20" TextColor="#4FC3F7" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
             <!-- Controls Info -->
             <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16" Margin="0,8,0,0">
                 <VerticalStackLayout Spacing="8">

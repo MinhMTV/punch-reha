@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PunchReha.ViewModels"
+             xmlns:models="clr-namespace:PunchReha.Models"
+             x:Class="PunchReha.Views.HistoryPage"
+             x:DataType="vm:HistoryViewModel"
+             Title="📊 Verlauf"
+             BackgroundColor="#0A0A1A">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <!-- Global Stats -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="📈 Gesamtstatistik" FontSize="18" FontAttributes="Bold" TextColor="White" />
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="{Binding GlobalStats.TotalSessions}" FontSize="24" FontAttributes="Bold" TextColor="#4FC3F7" HorizontalOptions="Center" />
+                            <Label Text="Sessions" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="{Binding GlobalStats.TotalPunches}" FontSize="24" FontAttributes="Bold" TextColor="#FF6B35" HorizontalOptions="Center" />
+                            <Label Text="Schläge" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="2" HorizontalOptions="Center">
+                            <Label Text="{Binding GlobalStats.BestScore}" FontSize="24" FontAttributes="Bold" TextColor="#4CAF50" HorizontalOptions="Center" />
+                            <Label Text="Bester" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Center">
+                            <Label Text="{Binding GlobalStats.TotalHits}" FontSize="20" FontAttributes="Bold" TextColor="#4CAF50" HorizontalOptions="Center" />
+                            <Label Text="Treffer" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Center">
+                            <Label Text="{Binding GlobalStats.AvgAccuracy, StringFormat='{0:P0}'}" FontSize="20" FontAttributes="Bold" TextColor="#FFD700" HorizontalOptions="Center" />
+                            <Label Text="Ø Genauigkeit" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Row="1" Grid.Column="2" HorizontalOptions="Center">
+                            <Label Text="{Binding GlobalStats.LevelsPlayed}" FontSize="20" FontAttributes="Bold" TextColor="#8E24AA" HorizontalOptions="Center" />
+                            <Label Text="Level gespielt" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Level Filter -->
+            <ScrollView Orientation="Horizontal">
+                <HorizontalStackLayout Spacing="8">
+                    <Border BackgroundColor="{Binding FilterLevel, Converter={StaticResource FilterConverter}}"
+                            StrokeShape="RoundRectangle 16" Padding="12,6">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding FilterByLevelCommand}" CommandParameter="{x:Null}" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Alle" FontSize="12" TextColor="White" />
+                    </Border>
+                    <CollectionView ItemsSource="{Binding AvailableLevels}" ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 16"
+                                        Padding="12,6" Margin="4,0">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HistoryViewModel}}, Path=FilterByLevelCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Label FontSize="12" TextColor="#CCCCCC">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="L{0}: {1}">
+                                                <Binding Path="Number" />
+                                                <Binding Path="Name" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <!-- Session List -->
+            <Label Text="📋 Letzte Sessions" FontSize="16" FontAttributes="Bold" TextColor="White" />
+
+            <CollectionView ItemsSource="{Binding Sessions}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12" Margin="0,4">
+                            <Grid ColumnDefinitions="56,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0" BackgroundColor="#2A2A4E" StrokeShape="Circle"
+                                        WidthRequest="48" HeightRequest="48">
+                                    <Label Text="{Binding TotalScore}"
+                                           FontSize="16" FontAttributes="Bold" TextColor="#4CAF50"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                    <Label Text="{Binding LevelName}" FontSize="14" FontAttributes="Bold" TextColor="White" />
+                                    <Label FontSize="11" TextColor="#888888">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{0} Treffer · {1:P0} Genauigkeit · x{2} Combo">
+                                                <Binding Path="Hits" />
+                                                <Binding Path="Accuracy" />
+                                                <Binding Path="MaxCombo" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                    <Label Text="{Binding PlayedAt, StringFormat='{0:dd.MM.yy HH:mm}'}"
+                                           FontSize="10" TextColor="#555555" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="{Binding MaxPower, StringFormat='{0:P0}'}"
+                                           FontSize="14" FontAttributes="Bold" TextColor="#FF6B35"
+                                           HorizontalOptions="End" />
+                                    <Label Text="Max Power" FontSize="9" TextColor="#888888" HorizontalOptions="End" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Empty state -->
+            <Label Text="Noch keine gespielten Sessions"
+                   FontSize="14" TextColor="#555555" HorizontalOptions="Center"
+                   IsVisible="{Binding Sessions, Converter={StaticResource EmptyListConverter}}" />
+
+            <!-- Clear button -->
+            <Button Text="🗑️ Verlauf löschen"
+                    Command="{Binding ClearAllCommand}"
+                    BackgroundColor="Transparent" TextColor="#E53935"
+                    HeightRequest="44" FontSize="12" Margin="0,16,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

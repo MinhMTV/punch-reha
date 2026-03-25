@@ -1,5 +1,6 @@
 using PunchReha.ViewModels;
 using PunchReha.Views;
+using PunchReha.Services;
 using Microsoft.Extensions.Logging;
 
 namespace PunchReha;
@@ -21,15 +22,21 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        // Register ViewModels
+        // Services
+        builder.Services.AddSingleton<SessionStorage>();
+        builder.Services.AddSingleton<SensorService>();
+
+        // ViewModels
         builder.Services.AddSingleton<MenuViewModel>();
         builder.Services.AddTransient<GameViewModel>();
         builder.Services.AddTransient<StatsViewModel>();
+        builder.Services.AddTransient<HistoryViewModel>();
 
-        // Register Views
+        // Views
         builder.Services.AddSingleton<MenuPage>();
         builder.Services.AddTransient<GamePage>();
         builder.Services.AddTransient<StatsPage>();
+        builder.Services.AddTransient<HistoryPage>();
 
         return builder.Build();
     }
