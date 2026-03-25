@@ -59,7 +59,19 @@ public partial class GameViewModel : ObservableObject, IDisposable
 
     private async void NavigateToStats()
     {
-        await Shell.Current.GoToAsync($"stats?level={LevelNumber}");
+        var stats = _session.Stats;
+        var url = $"stats?level={LevelNumber}" +
+                  $"&hits={stats.Hits}" +
+                  $"&misses={stats.Misses}" +
+                  $"&punches={stats.TotalPunches}" +
+                  $"&accuracy={stats.Accuracy:F4}" +
+                  $"&maxpower={stats.MaxPower:F4}" +
+                  $"&avgpower={stats.AvgPower:F4}" +
+                  $"&maxcombo={stats.MaxCombo}" +
+                  $"&reaction={stats.AvgReactionMs}";
+
+        _sensor.Stop();
+        await Shell.Current.GoToAsync(url);
     }
 
     public void OnTouchDown(float x, float y)

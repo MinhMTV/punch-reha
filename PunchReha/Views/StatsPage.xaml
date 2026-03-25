@@ -21,63 +21,70 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Label Text="📊 Statistiken" FontSize="18" FontAttributes="Bold" TextColor="White" />
+            <!-- Best Score indicator -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
+                <Grid ColumnDefinitions="*,*,*">
+                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                        <Label Text="{Binding BestScore}" FontSize="20" FontAttributes="Bold" TextColor="#FFD700" HorizontalOptions="Center" />
+                        <Label Text="🏆 Bester" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                        <Label Text="{Binding SessionCount}" FontSize="20" FontAttributes="Bold" TextColor="#4FC3F7" HorizontalOptions="Center" />
+                        <Label Text="📊 Sessions" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                        <Label Text="{Binding Level.Name}" FontSize="14" FontAttributes="Bold" TextColor="#FF6B35" HorizontalOptions="Center" />
+                        <Label Text="Level" FontSize="10" TextColor="#888888" HorizontalOptions="Center" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <Label Text="📊 Diese Runde" FontSize="18" FontAttributes="Bold" TextColor="White" />
 
             <!-- Stats Grid -->
             <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
                 <Border Grid.Row="0" Grid.Column="0" BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
                     <VerticalStackLayout HorizontalOptions="Center">
-                        <Label Text="{Binding Stats.Hits}" FontSize="28" FontAttributes="Bold" TextColor="#4CAF50" HorizontalOptions="Center" />
+                        <Label Text="{Binding Hits}" FontSize="28" FontAttributes="Bold" TextColor="#4CAF50" HorizontalOptions="Center" />
                         <Label Text="Treffer" FontSize="11" TextColor="#888888" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Row="0" Grid.Column="1" BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
                     <VerticalStackLayout HorizontalOptions="Center">
-                        <Label Text="{Binding Stats.Misses}" FontSize="28" FontAttributes="Bold" TextColor="#E53935" HorizontalOptions="Center" />
+                        <Label Text="{Binding Misses}" FontSize="28" FontAttributes="Bold" TextColor="#E53935" HorizontalOptions="Center" />
                         <Label Text="Fehlschläge" FontSize="11" TextColor="#888888" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Row="1" Grid.Column="0" BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
                     <VerticalStackLayout HorizontalOptions="Center">
-                        <Label Text="{Binding Stats.Accuracy, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#4FC3F7" HorizontalOptions="Center" />
+                        <Label Text="{Binding Accuracy, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#4FC3F7" HorizontalOptions="Center" />
                         <Label Text="Genauigkeit" FontSize="11" TextColor="#888888" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Row="1" Grid.Column="1" BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
                     <VerticalStackLayout HorizontalOptions="Center">
-                        <Label Text="{Binding Stats.MaxCombo, StringFormat='x{0}'}" FontSize="28" FontAttributes="Bold" TextColor="#FFD700" HorizontalOptions="Center" />
+                        <Label Text="{Binding MaxCombo, StringFormat='x{0}'}" FontSize="28" FontAttributes="Bold" TextColor="#FFD700" HorizontalOptions="Center" />
                         <Label Text="Max Combo" FontSize="11" TextColor="#888888" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Row="2" Grid.Column="0" BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
                     <VerticalStackLayout HorizontalOptions="Center">
-                        <Label Text="{Binding Stats.MaxPower, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#FF6B35" HorizontalOptions="Center" />
+                        <Label Text="{Binding MaxPower, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#FF6B35" HorizontalOptions="Center" />
                         <Label Text="Max Power" FontSize="11" TextColor="#888888" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Grid.Row="2" Grid.Column="1" BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
                     <VerticalStackLayout HorizontalOptions="Center">
-                        <Label Text="{Binding Stats.AvgPower, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#00897B" HorizontalOptions="Center" />
+                        <Label Text="{Binding AvgPower, StringFormat='{0:P0}'}" FontSize="28" FontAttributes="Bold" TextColor="#00897B" HorizontalOptions="Center" />
                         <Label Text="Avg Power" FontSize="11" TextColor="#888888" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Border>
             </Grid>
 
-            <!-- Direction Breakdown -->
-            <Label Text="🎯 Schläge nach Richtung" FontSize="16" FontAttributes="Bold" TextColor="White" Margin="0,8,0,0" />
-
+            <!-- Reaction Time -->
             <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
-                <CollectionView ItemsSource="{Binding Stats.PunchByDirection}">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid ColumnDefinitions="*,Auto" Padding="4">
-                                <Label Grid.Column="0" Text="{Binding Key}" FontSize="13" TextColor="#CCCCCC" />
-                                <Label Grid.Column="1" Text="{Binding Value, StringFormat='{0} Schläge'}"
-                                       FontAttributes="Bold" FontSize="13" TextColor="#4FC3F7" />
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                <Label Text="{Binding AvgReactionMs, StringFormat='⏱️ Durchschnittliche Reaktionszeit: {0}ms'}"
+                       FontSize="13" TextColor="#888888" HorizontalOptions="Center" />
             </Border>
 
             <!-- Action Buttons -->
@@ -86,10 +93,15 @@
                     BackgroundColor="#4CAF50" TextColor="White"
                     HeightRequest="56" FontSize="18" Margin="0,16,0,0" />
 
+            <Button Text="📊 Verlauf anzeigen"
+                    Command="{Binding ViewHistoryCommand}"
+                    BackgroundColor="#2A2A4E" TextColor="#4FC3F7"
+                    HeightRequest="48" FontSize="14" />
+
             <Button Text="🏠 Zum Menü"
                     Command="{Binding BackToMenuCommand}"
-                    BackgroundColor="Transparent" TextColor="#4FC3F7"
-                    HeightRequest="56" FontSize="18" />
+                    BackgroundColor="Transparent" TextColor="#888888"
+                    HeightRequest="48" FontSize="14" />
 
         </VerticalStackLayout>
     </ScrollView>

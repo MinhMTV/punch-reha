@@ -7,14 +7,14 @@
              x:DataType="vm:GameViewModel"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False"
-             BackgroundColor="Black">
+             BackgroundColor="#0A0A1A">
 
     <ContentPage.Resources>
         <converters:PercentConverter x:Key="PercentConverter" />
         <converters:MsToSecondsConverter x:Key="MsToSecondsConverter" />
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="56,*,64">
+    <Grid RowDefinitions="56,*,80">
 
         <!-- Stats Bar -->
         <Grid Grid.Row="0" ColumnDefinitions="*,*,*,*" ColumnSpacing="0"
@@ -84,27 +84,32 @@
                    HorizontalOptions="Center" VerticalOptions="Center" />
         </Grid>
 
-        <!-- Power Bar -->
-        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="0"
-              BackgroundColor="#1A1A2E" Padding="12,8">
-            <Label Grid.Column="0" VerticalOptions="Center">
-                <Label.Text>
-                    <MultiBinding StringFormat="💪 Max: {0}">
-                        <Binding Path="Stats.MaxPower" Converter="{StaticResource PercentConverter}" />
-                    </MultiBinding>
-                </Label.Text>
-                <Label.FontSize>12</Label.FontSize>
-                <Label.TextColor>White</Label.TextColor>
-            </Label>
-            <Label Grid.Column="1" VerticalOptions="Center" HorizontalTextAlignment="End">
-                <Label.Text>
-                    <MultiBinding StringFormat="📊 Avg: {0}">
-                        <Binding Path="Stats.AvgPower" Converter="{StaticResource PercentConverter}" />
-                    </MultiBinding>
-                </Label.Text>
-                <Label.FontSize>12</Label.FontSize>
-                <Label.TextColor>White</Label.TextColor>
-            </Label>
+        <!-- Power Bar (real-time feedback) -->
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" BackgroundColor="#1A1A2E" Padding="12,8">
+            <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="16">
+                <Label Grid.Column="0">
+                    <Label.Text>
+                        <MultiBinding StringFormat="💪 Max: {0}">
+                            <Binding Path="Stats.MaxPower" Converter="{StaticResource PercentConverter}" />
+                        </MultiBinding>
+                    </Label.Text>
+                    <Label.FontSize>11</Label.FontSize>
+                    <Label.TextColor>#888888</Label.TextColor>
+                </Label>
+                <Label Grid.Column="1">
+                    <Label.Text>
+                        <MultiBinding StringFormat="📊 Avg: {0}">
+                            <Binding Path="Stats.AvgPower" Converter="{StaticResource PercentConverter}" />
+                        </MultiBinding>
+                    </Label.Text>
+                    <Label.FontSize>11</Label.FontSize>
+                    <Label.TextColor>#888888</Label.TextColor>
+                    <Label.HorizontalTextAlignment>Center</Label.HorizontalTextAlignment>
+                </Label>
+                <Label Grid.Column="2" Text="{Binding SensorMode, StringFormat='📡 {0}'}"
+                       FontSize="11" TextColor="#555555" HorizontalTextAlignment="End" />
+            </Grid>
+            <GraphicsView Grid.Row="1" x:Name="PowerGauge" HeightRequest="20" />
         </Grid>
     </Grid>
 

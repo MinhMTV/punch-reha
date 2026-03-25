@@ -6,57 +6,72 @@ using PunchReha.Services;
 namespace PunchReha.ViewModels;
 
 [QueryProperty(nameof(LevelNumber), "level")]
+[QueryProperty(nameof(Hits), "hits")]
+[QueryProperty(nameof(Misses), "misses")]
+[QueryProperty(nameof(TotalPunches), "punches")]
+[QueryProperty(nameof(Accuracy), "accuracy")]
+[QueryProperty(nameof(MaxPower), "maxpower")]
+[QueryProperty(nameof(AvgPower), "avgpower")]
+[QueryProperty(nameof(MaxCombo), "maxcombo")]
+[QueryProperty(nameof(AvgReactionMs), "reaction")]
 public partial class StatsViewModel : ObservableObject
 {
     private readonly SessionStorage _storage = App.SessionStorage;
 
     [ObservableProperty] private int _levelNumber;
     [ObservableProperty] private GameLevel? _level;
-    [ObservableProperty] private GameStats _stats = new();
     [ObservableProperty] private int _totalScore;
     [ObservableProperty] private int _bestScore;
     [ObservableProperty] private int _sessionCount;
+
+    // Stats from game (passed as query params)
+    [ObservableProperty] private int _hits;
+    [ObservableProperty] private int _misses;
+    [ObservableProperty] private int _totalPunches;
+    [ObservableProperty] private float _accuracy;
+    [ObservableProperty] private float _maxPower;
+    [ObservableProperty] private float _avgPower;
+    [ObservableProperty] private int _maxCombo;
+    [ObservableProperty] private long _avgReactionMs;
+
+    private bool _saved;
 
     partial void OnLevelNumberChanged(int value)
     {
         Level = GameLevels.GetLevel(value);
         BestScore = _storage.GetBestScore(value);
         SessionCount = _storage.GetByLevel(value).Count;
+        SaveIfReady();
     }
 
-    /// <summary>
-    /// Call this from GamePage when game finishes.
-    /// Saves the session result.
-    /// </summary>
-    public void SaveGameResult(GameStats gameStats)
+    partial void OnHitsChanged(int value) => SaveIfReady();
+
+    private void SaveIfReady()
     {
-        Stats = gameStats;
-        TotalScore = gameStats.Hits * 10 + gameStats.MaxCombo * 5 + (int)(gameStats.AvgPower * 100);
-        BestScore = _storage.GetBestScore(LevelNumber);
+        if (_saved || Level == null || Hits == 0 && Misses == 0) return;
+        _saved = true;
 
-        if (Level != null)
+        TotalScore = Hits * 10 + MaxCombo * 5 + (int)(AvgPower * 100);
+
+        var result = new GameSessionResult
         {
-            var result = new GameSessionResult
-            {
-                LevelNumber = LevelNumber,
-                LevelName = Level.Name,
-                TotalScore = TotalScore,
-                TotalPunches = gameStats.TotalPunches,
-                Hits = gameStats.Hits,
-                Misses = gameStats.Misses,
-                Accuracy = gameStats.Accuracy,
-                MaxPower = gameStats.MaxPower,
-                AvgPower = gameStats.AvgPower,
-                MaxCombo = gameStats.MaxCombo,
-                AvgReactionMs = gameStats.AvgReactionMs,
-                DurationSeconds = Level.DurationSeconds,
-                PunchByDirection = new Dictionary<PunchDirection, int>(gameStats.PunchByDirection)
-            };
+            LevelNumber = LevelNumber,
+            LevelName = Level.Name,
+            TotalScore = TotalScore,
+            TotalPunches = TotalPunches,
+            Hits = Hits,
+            Misses = Misses,
+            Accuracy = Accuracy,
+            MaxPower = MaxPower,
+            AvgPower = AvgPower,
+            MaxCombo = MaxCombo,
+            AvgReactionMs = AvgReactionMs,
+            DurationSeconds = Level.DurationSeconds,
+        };
 
-            _storage.SaveSession(result);
-            SessionCount = _storage.GetByLevel(LevelNumber).Count;
-            BestScore = _storage.GetBestScore(LevelNumber);
-        }
+        _storage.SaveSession(result);
+        BestScore = _storage.GetBestScore(LevelNumber);
+        SessionCount = _storage.GetByLevel(LevelNumber).Count;
     }
 
     [RelayCommand]
@@ -74,6 +89,6 @@ public partial class StatsViewModel : ObservableObject
     [RelayCommand]
     private async Task ViewHistory()
     {
-        await Shell.Current.GoToAsync($"history?level={LevelNumber}");
+        await Shell.Current.GoToAsync("history");
     }
 }
