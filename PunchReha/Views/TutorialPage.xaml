@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PunchReha.Views.TutorialPage"
+             Title="🥊 So funktioniert's"
+             BackgroundColor="#0A0A1A">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label Text="🥊 Punch Reha"
+                   FontSize="32" FontAttributes="Bold" TextColor="White"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Rehabilitationstraining mit dem Boxhandschuh"
+                   FontSize="14" TextColor="#888888" HorizontalOptions="Center" />
+
+            <BoxView HeightRequest="1" BackgroundColor="#2A2A4E" Margin="0,8" />
+
+            <!-- Step 1 -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16">
+                <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                    <Border Grid.Column="0" BackgroundColor="#FF6B35" StrokeShape="Circle"
+                            WidthRequest="44" HeightRequest="44">
+                        <Label Text="1" FontSize="22" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Level wählen" FontSize="16" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Wähle ein Level deiner Wahl. Level 1 ist für Anfänger, Level 10 für Profis."
+                               FontSize="12" TextColor="#888888" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Step 2 -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16">
+                <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                    <Border Grid.Column="0" BackgroundColor="#4CAF50" StrokeShape="Circle"
+                            WidthRequest="44" HeightRequest="44">
+                        <Label Text="2" FontSize="22" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Ziele treffen" FontSize="16" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Farbige Kreise erscheinen auf dem Screen. Tippe auf die richtige Position um sie zu treffen."
+                               FontSize="12" TextColor="#888888" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Step 3 -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16">
+                <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                    <Border Grid.Column="0" BackgroundColor="#4FC3F7" StrokeShape="Circle"
+                            WidthRequest="44" HeightRequest="44">
+                        <Label Text="3" FontSize="22" FontAttributes="Bold"
+                               TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Kraft dosieren" FontSize="16" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Halte den Bildschirm länger gedrückt = härterer Schlag. Kurzer Tap = leichter Schlag."
+                               FontSize="12" TextColor="#888888" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Step 4 -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16">
+                <Grid ColumnDefinitions="48,*" ColumnSpacing="12">
+                    <Border Grid.Column="0" BackgroundColor="#FFD700" StrokeShape="Circle"
+                            WidthRequest="44" HeightRequest="44">
+                        <Label Text="4" FontSize="22" FontAttributes="Bold"
+                               TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Combo aufbauen" FontSize="16" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Treffe aufeinanderfolgende Ziele für Combo-Bonus. Je höher die Combo, desto mehr Punkte!"
+                               FontSize="12" TextColor="#888888" />
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Directions -->
+            <Label Text="📍 Richtungen" FontSize="18" FontAttributes="Bold" TextColor="White" Margin="0,8,0,0" />
+
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="32,*,*" Padding="0,2">
+                        <Label Grid.Column="0" Text="⬅️" FontSize="16" />
+                        <Label Grid.Column="1" Text="Links" FontSize="13" TextColor="White" />
+                        <Label Grid.Column="2" Text="Linke Seite des Screens" FontSize="11" TextColor="#888888" />
+                    </Grid>
+                    <Grid ColumnDefinitions="32,*,*" Padding="0,2">
+                        <Label Grid.Column="0" Text="➡️" FontSize="16" />
+                        <Label Grid.Column="1" Text="Rechts" FontSize="13" TextColor="White" />
+                        <Label Grid.Column="2" Text="Rechte Seite des Screens" FontSize="11" TextColor="#888888" />
+                    </Grid>
+                    <Grid ColumnDefinitions="32,*,*" Padding="0,2">
+                        <Label Grid.Column="0" Text="⬆️" FontSize="16" />
+                        <Label Grid.Column="1" Text="Hoch" FontSize="13" TextColor="White" />
+                        <Label Grid.Column="2" Text="Oben am Screen" FontSize="11" TextColor="#888888" />
+                    </Grid>
+                    <Grid ColumnDefinitions="32,*,*" Padding="0,2">
+                        <Label Grid.Column="0" Text="⬇️" FontSize="16" />
+                        <Label Grid.Column="1" Text="Tief" FontSize="13" TextColor="White" />
+                        <Label Grid.Column="2" Text="Unten am Screen" FontSize="11" TextColor="#888888" />
+                    </Grid>
+                    <Grid ColumnDefinitions="32,*,*" Padding="0,2">
+                        <Label Grid.Column="0" Text="🎯" FontSize="16" />
+                        <Label Grid.Column="1" Text="Gerade" FontSize="13" TextColor="White" />
+                        <Label Grid.Column="2" Text="Mitte des Screens" FontSize="11" TextColor="#888888" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sensor Note -->
+            <Border BackgroundColor="#2A1A0A" StrokeShape="RoundRectangle 12" Padding="16">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="📡 Sensor-Modus (bald verfügbar)" FontSize="14" FontAttributes="Bold" TextColor="#FF9800" />
+                    <Label Text="Mit dem BLE-Sensor werden Richtung und Kraft automatisch erkannt. Der Touch-Modus ist nur für Tests."
+                           FontSize="12" TextColor="#888888" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Text="🚀 Los geht's!"
+                    Clicked="OnStartClicked"
+                    BackgroundColor="#FF6B35" TextColor="White"
+                    HeightRequest="56" FontSize="18" Margin="0,16,0,32" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -10,6 +10,11 @@
        Shell.TitleColor="White">
 
     <ShellContent
+        Title="🥊 Tutorial"
+        Route="tutorial"
+        ContentTemplate="{DataTemplate views:TutorialPage}" />
+
+    <ShellContent
         Title="🥊 Menü"
         Route="menu"
         ContentTemplate="{DataTemplate views:MenuPage}" />

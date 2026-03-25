@@ -33,6 +33,7 @@ public static class MauiProgram
         builder.Services.AddTransient<HistoryViewModel>();
 
         // Views
+        builder.Services.AddSingleton<TutorialPage>();
         builder.Services.AddSingleton<MenuPage>();
         builder.Services.AddTransient<GamePage>();
         builder.Services.AddTransient<StatsPage>();
