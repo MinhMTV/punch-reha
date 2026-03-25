@@ -22,6 +22,10 @@ public partial class GameViewModel : ObservableObject, IDisposable
     [ObservableProperty] private float _screenWidth;
     [ObservableProperty] private float _screenHeight;
     [ObservableProperty] private string _sensorMode = "Touch";
+    [ObservableProperty] private List<ScorePopup> _scorePopups = new();
+
+    private int _lastCombo;
+    private long _nextPopupId;
 
     public SensorService Sensor => _sensor;
 
@@ -64,12 +68,37 @@ public partial class GameViewModel : ObservableObject, IDisposable
             // Trigger feedback on new hit
             if (session.Stats.Hits > prevHits)
             {
-                FeedbackService.OnHit(session.Stats.MaxPower);
+                var power = session.Stats.MaxPower;
+                FeedbackService.OnHit(power);
                 if (session.Stats.Combo > _lastCombo && session.Stats.Combo > 1)
                 {
                     FeedbackService.OnCombo(session.Stats.Combo);
                 }
                 _lastCombo = session.Stats.Combo;
+
+                // Create score popup at last target position
+                var lastTarget = Targets.LastOrDefault();
+                if (lastTarget != null)
+                {
+                    var points = 10 + (int)(power * 20) + session.Stats.Combo * 2;
+                    var popup = new ScorePopup
+                    {
+                        Id = _nextPopupId++,
+                        X = 0.5f, // Center-ish
+                        Y = 0.5f,
+                        Points = points,
+                        Text = session.Stats.Combo > 1 ? $"+{points} x{session.Stats.Combo}" : $"+{points}",
+                    };
+                    var popups = ScorePopups.Where(p => !p.IsExpired).ToList();
+                    popups.Add(popup);
+                    ScorePopups = popups;
+                }
+            }
+
+            // Clean up expired popups
+            if (ScorePopups.Any(p => p.IsExpired))
+            {
+                ScorePopups = ScorePopups.Where(p => !p.IsExpired).ToList();
             }
 
             if (session.State == GameState.Finished)
