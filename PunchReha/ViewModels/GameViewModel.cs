@@ -39,16 +39,38 @@ public partial class GameViewModel : ObservableObject, IDisposable
         _engine.StartLevel(Level);
     }
 
+    public void OnTouchUp()
+    {
+        _sensor.TouchDetector.OnTouchUp();
+    }
+
+    /// <summary>
+    /// Called by the engine when state changes — also triggers feedback.
+    /// </summary>
+    private int _lastCombo;
+
     private void OnEngineStateChanged(object? sender, GameSession session)
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
+            var prevHits = _session.Hits;
             GameState = session.State;
             TimeRemainingMs = session.TimeRemainingMs;
             CountdownValue = session.CountdownValue;
             Targets = new List<Target>(session.Targets);
             Stats = session.Stats;
             Score = session.Stats.Hits * 10 + session.Stats.MaxCombo * 5;
+
+            // Trigger feedback on new hit
+            if (session.Stats.Hits > prevHits)
+            {
+                FeedbackService.OnHit(session.Stats.MaxPower);
+                if (session.Stats.Combo > _lastCombo && session.Stats.Combo > 1)
+                {
+                    FeedbackService.OnCombo(session.Stats.Combo);
+                }
+                _lastCombo = session.Stats.Combo;
+            }
 
             if (session.State == GameState.Finished)
             {
