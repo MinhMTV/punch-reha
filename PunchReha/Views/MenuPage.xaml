@@ -2,24 +2,45 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:PunchReha.ViewModels"
-             xmlns:models="clr-namespace:PunchReha.Models"
              x:Class="PunchReha.Views.MenuPage"
              x:DataType="vm:MenuViewModel"
-             Title="🥊 Punch Reha">
+             Title="🥊 Punch Reha"
+             BackgroundColor="#0A0A1A">
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
 
-            <Label Text="🎯 Level wählen"
-                   FontSize="24" FontAttributes="Bold" />
+            <!-- Header -->
+            <VerticalStackLayout Spacing="4" Margin="0,8,0,0">
+                <Label Text="🥊 Punch Reha"
+                       FontSize="32" FontAttributes="Bold" TextColor="White" />
+                <Label Text="Rehabilitationstraining mit Boxhandschuh-Sensor"
+                       FontSize="14" TextColor="#888888" />
+            </VerticalStackLayout>
 
-            <Label Text="Halte den Bildschirm gedrückt = härterer Schlag"
-                   FontSize="12" TextColor="Gray" />
+            <!-- Sensor Status -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="12">
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="📡 Sensor-Status" FontSize="14" FontAttributes="Bold" TextColor="White" />
+                        <Label Text="Touch-Modus (Placeholder) — Lange drücken = härterer Schlag"
+                               FontSize="11" TextColor="#888888" />
+                    </VerticalStackLayout>
+                    <Border Grid.Column="1" BackgroundColor="#FF9800" StrokeShape="RoundRectangle 6"
+                            Padding="8,4" VerticalOptions="Center">
+                        <Label Text="SIM" FontSize="10" FontAttributes="Bold" TextColor="White" />
+                    </Border>
+                </Grid>
+            </Border>
 
-            <CollectionView ItemsSource="{Binding Levels}">
+            <!-- Level Selection -->
+            <Label Text="🎯 Level wählen" FontSize="20" FontAttributes="Bold" TextColor="White"
+                   Margin="0,8,0,0" />
+
+            <CollectionView ItemsSource="{Binding Levels}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:GameLevel">
-                        <Border Stroke="LightGray" StrokeShape="RoundRectangle 8"
+                    <DataTemplate>
+                        <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12"
                                 Padding="16" Margin="0,4">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
@@ -27,31 +48,36 @@
                                     CommandParameter="{Binding .}" />
                             </Border.GestureRecognizers>
 
-                            <Grid ColumnDefinitions="48,*,32" ColumnSpacing="12">
-                                <Label Grid.Column="0"
-                                       Text="{Binding Number}"
-                                       FontSize="24" FontAttributes="Bold"
-                                       TextColor="#1976D2"
-                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            <Grid ColumnDefinitions="56,*,40" ColumnSpacing="12">
+                                <!-- Level Number -->
+                                <Border Grid.Column="0" BackgroundColor="#2A2A4E"
+                                        StrokeShape="Circle" WidthRequest="48" HeightRequest="48">
+                                    <Label Text="{Binding Number}"
+                                           FontSize="22" FontAttributes="Bold"
+                                           TextColor="#FF6B35"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
 
-                                <VerticalStackLayout Grid.column="1">
+                                <!-- Level Info -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="2">
                                     <Label Text="{Binding Name}"
-                                           FontSize="16" FontAttributes="Bold" />
-                                    <Label FontSize="11" TextColor="Gray">
+                                           FontSize="16" FontAttributes="Bold" TextColor="White" />
+                                    <Label FontSize="11" TextColor="#888888">
                                         <Label.Text>
-                                            <MultiBinding StringFormat="{0}s · {1} Richtungen · Speed x{2}">
+                                            <MultiBinding StringFormat="{0}s · {1} Richtungen · Speed x{2:F1}">
                                                 <Binding Path="DurationSeconds" />
                                                 <Binding Path="Directions.Length" />
                                                 <Binding Path="SpeedMultiplier" />
                                             </MultiBinding>
                                         </Label.Text>
                                     </Label>
-                                    <ProgressBar Progress="{Binding Number}" MaximumHeightRequest="4" />
+                                    <ProgressBar Progress="{Binding Number}" MaximumHeightRequest="3"
+                                                 ProgressColor="#FF6B35" BackgroundColor="#2A2A4E" />
                                 </VerticalStackLayout>
 
-                                <Label Grid.Column="2"
-                                       Text="▶" FontSize="20"
-                                       TextColor="#1976D2"
+                                <!-- Play Icon -->
+                                <Label Grid.Column="2" Text="▶" FontSize="20"
+                                       TextColor="#FF6B35"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Grid>
                         </Border>
@@ -59,18 +85,27 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Label Text="ℹ️ Steuerung" FontSize="16" FontAttributes="Bold" Margin="0,16,0,0" />
+            <!-- Controls Info -->
+            <Border BackgroundColor="#1A1A2E" StrokeShape="RoundRectangle 12" Padding="16" Margin="0,8,0,0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="ℹ️ Steuerung" FontSize="16" FontAttributes="Bold" TextColor="White" />
 
-            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8">
-                <Label Grid.Row="0" Grid.Column="0" Text="Tap (kurz)" FontAttributes="Bold" FontSize="12" />
-                <Label Grid.Row="0" Grid.Column="1" Text="Leichter Schlag (20%)" FontSize="12" TextColor="Gray" />
-                <Label Grid.Row="1" Grid.Column="0" Text="Halten (0.5s)" FontAttributes="Bold" FontSize="12" />
-                <Label Grid.Row="1" Grid.Column="1" Text="Mittlerer Schlag (50%)" FontSize="12" TextColor="Gray" />
-                <Label Grid.Row="2" Grid.Column="0" Text="Halten (1s)" FontAttributes="Bold" FontSize="12" />
-                <Label Grid.Row="2" Grid.Column="1" Text="Starker Schlag (80%)" FontSize="12" TextColor="Gray" />
-                <Label Grid.Row="3" Grid.Column="0" Text="Halten (2s+)" FontAttributes="Bold" FontSize="12" />
-                <Label Grid.Row="3" Grid.Column="1" Text="Maximaler Schlag (100%)" FontSize="12" TextColor="Gray" />
-            </Grid>
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="4" ColumnSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Tap (kurz)" FontAttributes="Bold" FontSize="12" TextColor="#CCCCCC" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="Leichter Schlag (20%)" FontSize="12" TextColor="#888888" />
+                        <Label Grid.Row="1" Grid.Column="0" Text="Halten (0.5s)" FontAttributes="Bold" FontSize="12" TextColor="#CCCCCC" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="Mittlerer Schlag (50%)" FontSize="12" TextColor="#888888" />
+                        <Label Grid.Row="2" Grid.Column="0" Text="Halten (1s)" FontAttributes="Bold" FontSize="12" TextColor="#CCCCCC" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="Starker Schlag (80%)" FontSize="12" TextColor="#888888" />
+                        <Label Grid.Row="3" Grid.Column="0" Text="Halten (2s+)" FontAttributes="Bold" FontSize="12" TextColor="#CCCCCC" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="Maximal (100%)" FontSize="12" TextColor="#888888" />
+                        <BoxView Grid.Row="4" Grid.ColumnSpan="2" HeightRequest="1" BackgroundColor="#2A2A4E" Margin="0,4" />
+                    </Grid>
+
+                    <Label Text="Später: BLE-Sensor erkennt Schlag-Richtung und -Kraft automatisch"
+                           FontSize="11" TextColor="#555555" FontAttributes="Italic" />
+                </VerticalStackLayout>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>

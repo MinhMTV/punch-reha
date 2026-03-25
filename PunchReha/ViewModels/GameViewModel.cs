@@ -9,7 +9,7 @@ namespace PunchReha.ViewModels;
 public partial class GameViewModel : ObservableObject, IDisposable
 {
     private readonly GameEngine _engine = new();
-    private readonly TouchPunchDetector _touchDetector = new();
+    private readonly SensorService _sensor = new();
 
     [ObservableProperty] private int _levelNumber;
     [ObservableProperty] private GameLevel? _level;
@@ -21,19 +21,21 @@ public partial class GameViewModel : ObservableObject, IDisposable
     [ObservableProperty] private int _score;
     [ObservableProperty] private float _screenWidth;
     [ObservableProperty] private float _screenHeight;
+    [ObservableProperty] private string _sensorMode = "Touch";
 
-    public TouchPunchDetector TouchDetector => _touchDetector;
+    public SensorService Sensor => _sensor;
 
     public GameViewModel()
     {
         _engine.StateChanged += OnEngineStateChanged;
-        _touchDetector.PunchDetected += (_, e) => _engine.HandlePunch(e);
+        _sensor.PunchDetected += (_, e) => _engine.HandlePunch(e);
     }
 
     partial void OnLevelNumberChanged(int value)
     {
         Level = GameLevels.GetLevel(value);
-        _touchDetector.Start();
+        SensorMode = _sensor.Mode;
+        _sensor.StartTouchMode();
         _engine.StartLevel(Level);
     }
 
@@ -62,13 +64,13 @@ public partial class GameViewModel : ObservableObject, IDisposable
 
     public void OnTouchDown(float x, float y)
     {
-        _touchDetector.SetScreenSize(ScreenWidth, ScreenHeight);
-        _touchDetector.OnTouchDown(x, y);
+        _sensor.SetScreenSize(ScreenWidth, ScreenHeight);
+        _sensor.TouchDetector.OnTouchDown(x, y);
     }
 
     public void OnTouchUp()
     {
-        _touchDetector.OnTouchUp();
+        _sensor.TouchDetector.OnTouchUp();
     }
 
     [RelayCommand]
@@ -81,14 +83,33 @@ public partial class GameViewModel : ObservableObject, IDisposable
     private async Task GoBack()
     {
         _engine.Stop();
-        _touchDetector.Stop();
+        _sensor.Stop();
         await Shell.Current.GoToAsync("..");
+    }
+
+    [RelayCommand]
+    private async Task ToggleSensorMode()
+    {
+        if (_sensor.IsUsingBle)
+        {
+            _sensor.DisconnectBle();
+            SensorMode = _sensor.Mode;
+        }
+        else
+        {
+            var connected = await _sensor.TryConnectBleAsync();
+            SensorMode = _sensor.Mode;
+            if (!connected)
+            {
+                // Could show an alert here
+            }
+        }
     }
 
     public void Dispose()
     {
         _engine.Dispose();
-        _touchDetector.Stop();
+        _sensor.Dispose();
         GC.SuppressFinalize(this);
     }
 }

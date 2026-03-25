@@ -2,70 +2,110 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:PunchReha.ViewModels"
+             xmlns:converters="clr-namespace:PunchReha.Converters"
              x:Class="PunchReha.Views.GamePage"
-             x:DataType="vm:GameViewModel">
+             x:DataType="vm:GameViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="Black">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <ContentPage.Resources>
+        <converters:PercentConverter x:Key="PercentConverter" />
+        <converters:MsToSecondsConverter x:Key="MsToSecondsConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="56,*,64">
+
         <!-- Stats Bar -->
-        <Border Grid.Row="0" BackgroundColor="#E3F2FD" Padding="12" Margin="8">
-            <Grid ColumnDefinitions="*,*,*,*">
-                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
-                    <Label Text="⏱️" FontSize="14" HorizontalOptions="Center" />
-                    <Label Text="{Binding TimeRemainingMs, StringFormat='{0}s'}"
-                           FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
-                    <Label Text="🎯" FontSize="14" HorizontalOptions="Center" />
-                    <Label Text="{Binding Score}"
-                           FontSize="18" FontAttributes="Bold" HorizontalOptions="Center" />
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
-                    <Label Text="🔥" FontSize="14" HorizontalOptions="Center" />
-                    <Label FontSize="18" FontAttributes="Bold" HorizontalOptions="Center">
-                        <Label.Text>
-                            <MultiBinding StringFormat="x{0}">
-                                <Binding Path="Stats.Combo" />
-                            </MultiBinding>
-                        </Label.Text>
-                    </Label>
-                </VerticalStackLayout>
-                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
-                    <Label Text="📊" FontSize="14" HorizontalOptions="Center" />
-                    <Label FontSize="18" FontAttributes="Bold" HorizontalOptions="Center">
-                        <Label.Text>
-                            <MultiBinding StringFormat="{0}%">
-                                <Binding Path="Stats.Accuracy" Converter="{StaticResource PercentConverter}" />
-                            </MultiBinding>
-                        </Label.Text>
-                    </Label>
-                </VerticalStackLayout>
-            </Grid>
-        </Border>
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,*,*" ColumnSpacing="0"
+              BackgroundColor="#1A1A2E" Padding="8,4">
+            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="⏱️" FontSize="12" HorizontalOptions="Center" />
+                <Label Text="{Binding TimeRemainingMs, Converter={StaticResource MsToSecondsConverter}}"
+                       FontSize="16" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="🎯" FontSize="12" HorizontalOptions="Center" />
+                <Label Text="{Binding Score}" FontSize="16" FontAttributes="Bold"
+                       TextColor="#FFD700" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="🔥" FontSize="12" HorizontalOptions="Center" />
+                <Label FontSize="16" FontAttributes="Bold" TextColor="#FF6B35" HorizontalOptions="Center">
+                    <Label.Text>
+                        <MultiBinding StringFormat="x{0}">
+                            <Binding Path="Stats.Combo" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="📊" FontSize="12" HorizontalOptions="Center" />
+                <Label FontSize="16" FontAttributes="Bold" TextColor="#4FC3F7" HorizontalOptions="Center">
+                    <Label.Text>
+                        <MultiBinding StringFormat="{0}%">
+                            <Binding Path="Stats.Accuracy" Converter="{StaticResource PercentConverter}" />
+                        </MultiBinding>
+                    </Label.Text>
+                </Label>
+            </VerticalStackLayout>
+        </Grid>
 
-        <!-- Game Area (touch to punch) -->
-        <Grid Grid.Row="1" x:Name="GameArea"
-              BackgroundColor="Black">
-            <!-- Targets are drawn programmatically in code-behind -->
+        <!-- Game Area -->
+        <Grid Grid.Row="1" x:Name="GameArea" BackgroundColor="#0A0A1A">
             <GraphicsView x:Name="GameCanvas" />
             
+            <!-- Countdown overlay -->
+            <VerticalStackLayout x:Name="CountdownOverlay"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 IsVisible="False">
+                <Label x:Name="CountdownLabel" Text="3"
+                       FontSize="96" FontAttributes="Bold"
+                       TextColor="#FF6B35" HorizontalOptions="Center" />
+                <Label Text="Bereit machen!"
+                       FontSize="20" TextColor="White" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <!-- Paused overlay -->
+            <Grid x:Name="PausedOverlay" BackgroundColor="#AA000000" IsVisible="False">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="⏸️ Pausiert" FontSize="36" FontAttributes="Bold"
+                           TextColor="White" HorizontalOptions="Center" />
+                    <Button Text="▶ Weiter" Clicked="OnResumeClicked"
+                            BackgroundColor="#4CAF50" TextColor="White"
+                            WidthRequest="200" HeightRequest="56" FontSize="18"
+                            HorizontalOptions="Center" Margin="0,24,0,0" />
+                </VerticalStackLayout>
+            </Grid>
+
             <!-- Waiting message -->
-            <Label Text="⚡ Warte auf Ziele..."
-                   TextColor="White" FontSize="18"
-                   HorizontalOptions="Center" VerticalOptions="Center"
-                   Opacity="0.5" />
+            <Label x:Name="WaitingLabel" Text="⚡ Warte auf Ziele..."
+                   TextColor="#555555" FontSize="16"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
         </Grid>
 
         <!-- Power Bar -->
-        <Border Grid.Row="2" Padding="12" Margin="8">
-            <Grid ColumnDefinitions="*,*">
-                <Label Grid.Column="0"
-                       Text="{Binding Stats.MaxPower, StringFormat='💪 Max: {0:P0}'}"
-                       FontSize="12" />
-                <Label Grid.Column="1"
-                       Text="{Binding Stats.AvgPower, StringFormat='📊 Avg: {0:P0}'}"
-                       FontSize="12" HorizontalTextAlignment="End" />
-            </Grid>
-        </Border>
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="0"
+              BackgroundColor="#1A1A2E" Padding="12,8">
+            <Label Grid.Column="0" VerticalOptions="Center">
+                <Label.Text>
+                    <MultiBinding StringFormat="💪 Max: {0}">
+                        <Binding Path="Stats.MaxPower" Converter="{StaticResource PercentConverter}" />
+                    </MultiBinding>
+                </Label.Text>
+                <Label.FontSize>12</Label.FontSize>
+                <Label.TextColor>White</Label.TextColor>
+            </Label>
+            <Label Grid.Column="1" VerticalOptions="Center" HorizontalTextAlignment="End">
+                <Label.Text>
+                    <MultiBinding StringFormat="📊 Avg: {0}">
+                        <Binding Path="Stats.AvgPower" Converter="{StaticResource PercentConverter}" />
+                    </MultiBinding>
+                </Label.Text>
+                <Label.FontSize>12</Label.FontSize>
+                <Label.TextColor>White</Label.TextColor>
+            </Label>
+        </Grid>
     </Grid>
 
 </ContentPage>
